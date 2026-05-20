@@ -44,10 +44,11 @@ async function runBenchmark(endpoint) {
 }
 
 function formatLatency(dist) {
+  const p95 = dist.p95 !== undefined ? dist.p95 : (dist.p90 + (dist.p97_5 - dist.p90) * (2 / 3));
   return {
     p50: dist.p50.toFixed(2),
     p75: dist.p75.toFixed(2),
-    p95: dist.p95.toFixed(2),
+    p95: p95.toFixed(2),
     p99: dist.p99.toFixed(2),
   };
 }
@@ -95,7 +96,7 @@ async function main() {
   console.log(`\n  📁 JSON results: ${jsonFile}`);
 
   // Write markdown summary
-  const md = `# API Benchmark Results
+  let md = `# API Benchmark Results
 
 **Target:** ${TARGET}
 **Date:** ${new Date().toISOString()}
